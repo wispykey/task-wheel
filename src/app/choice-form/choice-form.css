@@ -1,3 +1,12 @@
 :host {
     min-width: 500px;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: white;
+}
+
+input.new-choice {
+    font-size: 24px;
+    margin-bottom: 1rem;
 }
