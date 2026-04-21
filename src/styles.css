@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+    background-color: rgb(218, 237, 231);
+}
+
+input {
+    font-size: 16px;
+}
