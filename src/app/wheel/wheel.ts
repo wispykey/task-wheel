@@ -39,6 +39,7 @@ export class Wheel {
   })
 
   wheel = viewChild<ElementRef<HTMLCanvasElement>>("wheel");
+  flipper = viewChild<ElementRef<HTMLCanvasElement>>("flipper");
 
   center = {
     x: 250,
@@ -82,6 +83,27 @@ export class Wheel {
     const wheel = this.wheel()!.nativeElement;
     wheel.classList.add('spinning');
     wheel.style.transform = `rotate(${currentAngleDegrees}deg)`;
+  }
+
+  drawFlipper() {
+    const ctx = this.flipper()!.nativeElement.getContext('2d');
+
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, 500, 500);
+
+    const flipperSize = 5;
+    ctx.fillStyle = 'black';
+
+    let flipperX = this.center.x + this.radius;
+    let flipperY = this.center.y;
+
+    ctx.beginPath();
+    ctx.moveTo(flipperX - 20, flipperY);
+    ctx.arc(flipperX, flipperY, flipperSize, -Math.PI / 2, Math.PI / 2);
+    ctx.closePath();
+
+    ctx.fill();
   }
 
   drawWheel() {
@@ -139,6 +161,9 @@ export class Wheel {
 
       ctx.restore();
     });
+
+
+    this.drawFlipper()
   }
 
   constructor() {

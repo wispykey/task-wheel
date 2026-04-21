@@ -1,2 +1,5 @@
-<canvas #wheel width="500" height="500" (transitionend)="resetWheelTransition()"></canvas>
+<div class="wheel-container">
+    <canvas #wheel width="500" height="500" (transitionend)="resetWheelTransition()"></canvas>
+    <canvas #flipper width="500" height="500"></canvas>
+</div>
 <button [disabled]="wheel.classList.contains('spinning')" (click)="spinWheel()">Spin</button>

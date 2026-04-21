@@ -1,8 +1,16 @@
 canvas {
-    width: 500px;
-    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+
 }
 
 .spinning {
     transition: transform 5s cubic-bezier(0.1, 0.7, 0.1, 1);
+}
+
+.wheel-container {
+    position: relative;
+    width: 500px;
+    height: 500px;
 }
