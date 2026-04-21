@@ -62,6 +62,18 @@ export class Wheel {
 
     console.log("slices", slices);
 
+    // Draw a placeholder circle if no choices have been created yet
+    if (slices.length === 0) {
+      ctx.fillStyle = 'grey';
+
+      ctx.beginPath();
+      ctx.moveTo(this.center.x, this.center.y);
+      ctx.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
+      ctx.closePath();
+
+      ctx.fill();
+    }
+
     slices.map((slice, i) => {
       ctx.fillStyle = this.colors[i % this.colors.length];
 
