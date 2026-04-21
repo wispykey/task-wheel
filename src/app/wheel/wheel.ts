@@ -114,6 +114,17 @@ export class Wheel implements OnInit, AfterViewInit {
 
     let slices: WheelSlice[] = this.slices();
 
+    // Draw shadow first as a single circle underneath
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur = 20;
+    ctx.beginPath();
+    ctx.arc(this.size() / 2, this.size() / 2, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = '#000';
+    ctx.fill();
+    ctx.restore();
+
+
     // Draw a placeholder circle if no choices have been created yet
     if (slices.length === 0) {
       ctx.fillStyle = 'grey';
@@ -160,6 +171,9 @@ export class Wheel implements OnInit, AfterViewInit {
 
       ctx.restore();
     });
+
+
+    // then draw slices normally (no shadow)
 
 
     this.drawFlipper();
