@@ -1,2 +1,2 @@
-<app-wheel [choices]="choices" />
+<app-wheel [choices]="choices" (picked)="reportPickedChoice($event)" />
 <app-choice-form (update)="updateChoices($event)" />

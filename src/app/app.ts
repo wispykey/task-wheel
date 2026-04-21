@@ -20,4 +20,8 @@ export class App {
     this.choices = newChoices;
   }
 
+  reportPickedChoice(choiceIndex: number) {
+    alert(`You picked ${this.choices[choiceIndex].label}!`);
+  }
+
 }

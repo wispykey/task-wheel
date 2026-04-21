@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, input, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, input, output, viewChild } from '@angular/core';
 import { Choice } from '../model/choice';
 
 @Component({
@@ -9,6 +9,7 @@ import { Choice } from '../model/choice';
 })
 export class Wheel {
   choices = input.required<Choice[]>();
+  picked = output<number>();
 
   totalWeight = computed(() => {
     return this.choices().reduce((acc, choice) => acc += choice.weight, 0);
@@ -49,8 +50,19 @@ export class Wheel {
 
   }
 
-  drawWheel() {
 
+  spinWheel() {
+    // Play animation
+    // When animation ends, report which choice was picked
+
+    let choiceIndex = Math.floor(Math.random() * this.choices().length);
+
+    this.picked.emit(choiceIndex);
+
+
+  }
+
+  drawWheel() {
     console.log(this.wheel());
     const ctx = this.wheel()!.nativeElement.getContext('2d');
 
