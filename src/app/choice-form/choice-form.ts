@@ -38,7 +38,9 @@ export class ChoiceForm implements OnInit {
         label: this.fb.control<string>(newChoiceLabel, { nonNullable: true }),
         weight: this.fb.control<number>(1, { nonNullable: true })
       })
-    )
+    );
+
+    this.form.controls.newChoice.patchValue("", { emitEvent: false });
   }
 
   ngOnInit() {
