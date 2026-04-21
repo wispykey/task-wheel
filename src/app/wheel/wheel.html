@@ -1,2 +1,2 @@
-<canvas #wheel width="500" height="500"></canvas>
-<button (click)="spinWheel()">Spin</button>
+<canvas #wheel width="500" height="500" (transitionend)="resetWheelTransition()"></canvas>
+<button [disabled]="wheel.classList.contains('spinning')" (click)="spinWheel()">Spin</button>

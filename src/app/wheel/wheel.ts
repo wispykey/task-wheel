@@ -11,8 +11,31 @@ export class Wheel {
   choices = input.required<Choice[]>();
   picked = output<number>();
 
+  currentAngle: number = 0;
+
   totalWeight = computed(() => {
     return this.choices().reduce((acc, choice) => acc += choice.weight, 0);
+  })
+
+  slices = computed(() => {
+    let slices: WheelSlice[] = [];
+
+    let currAngle = 0;
+
+    this.choices().map((choice) => {
+      let proportion = choice.weight / this.totalWeight();
+      let angleLength = 2 * Math.PI * proportion;
+
+      slices.push({
+        label: choice.label,
+        startAngle: currAngle,
+        endAngle: currAngle + angleLength
+      });
+
+      currAngle += angleLength;
+    })
+
+    return slices;
   })
 
   wheel = viewChild<ElementRef<HTMLCanvasElement>>("wheel");
@@ -26,53 +49,51 @@ export class Wheel {
 
   colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'purple'];
 
-  computeArcs(): WheelSlice[] {
-    let slices: WheelSlice[] = [];
+  get currentChoiceIndex(): number {
+    if (this.slices().length === 1) return 0;
 
-    let currAngle = 0;
+    // Assume we pick the choice whose slice covers angle 0
 
-    this.choices().map((choice) => {
-      let proportion = choice.weight / this.totalWeight();
-      let angleLength = 2 * Math.PI * proportion;
+    // Wheel spins clockwise, which means our reference point has rotated counter-clockwise
+    const angle = (-this.currentAngle % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI);
 
-      slices.push({
-        startAngle: currAngle,
-        endAngle: currAngle + angleLength
-      });
-
-      currAngle += angleLength;
-    })
-
-
-
-
-    return slices;
-
+    return this.slices().findIndex((slice) => {
+      // There can only ever be one slice that crosses zero; handles wraparound cleanly
+      return slice.startAngle >= slice.endAngle || angle >= slice.startAngle && angle <= slice.endAngle;
+    });
   }
 
+  resetWheelTransition() {
+    const wheel = this.wheel()!.nativeElement;
+    wheel.classList.remove('spinning');
+    // wheel.style.transform = 'none';
+
+    this.picked.emit(this.currentChoiceIndex);
+  }
 
   spinWheel() {
-    // Play animation
-    // When animation ends, report which choice was picked
+    // Add a few extra rotations randomly for variety
+    const numFullRotations = 10 + Math.floor(Math.random() * 3);
 
-    let choiceIndex = Math.floor(Math.random() * this.choices().length);
+    const fullRotationAngle = numFullRotations * (2 * Math.PI);
+    const angleToNextChoice = fullRotationAngle + Math.random() * (2 * Math.PI);
+    this.currentAngle += angleToNextChoice;
 
-    this.picked.emit(choiceIndex);
+    const currentAngleDegrees = this.currentAngle / (2 * Math.PI) * 360;
 
-
+    const wheel = this.wheel()!.nativeElement;
+    wheel.classList.add('spinning');
+    wheel.style.transform = `rotate(${currentAngleDegrees}deg)`;
   }
 
   drawWheel() {
-    console.log(this.wheel());
     const ctx = this.wheel()!.nativeElement.getContext('2d');
 
     if (!ctx) return;
 
     ctx.clearRect(0, 0, 500, 500);
 
-    let slices: WheelSlice[] = this.computeArcs();
-
-    console.log("slices", slices);
+    let slices: WheelSlice[] = this.slices();
 
     // Draw a placeholder circle if no choices have been created yet
     if (slices.length === 0) {
@@ -97,6 +118,14 @@ export class Wheel {
       ctx.fill();
     });
 
+    // //
+    // ctx.fillStyle = 'black';
+    // ctx.beginPath();
+    // ctx.moveTo(this.center.x, this.center.y);
+    // ctx.arc(this.center.x, this.center.y, this.radius, 0, 0);
+    // ctx.stroke();
+    // ctx.fill();
+
 
 
   }
@@ -109,6 +138,7 @@ export class Wheel {
 }
 
 type WheelSlice = {
+  label: string,
   startAngle: number,
   endAngle: number
 }
