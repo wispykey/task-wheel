@@ -1,5 +1,5 @@
+<h2>Choices</h2>
 <form [formGroup]="form" (ngSubmit)="submitForm()">
-    <label for="newChoice">Choice</label>
     <input id="newChoice" type="text" formControlName="newChoice" />
     @for (choice of choiceControls.controls; track $index) {
     <app-choice-row [choiceControls]="choice" (remove)="removeChoice($index)" />

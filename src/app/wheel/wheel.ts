@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, ElementRef, input, OnInit, output, viewChild } from '@angular/core';
 import { Choice } from '../model/choice';
 
 @Component({
@@ -7,7 +7,8 @@ import { Choice } from '../model/choice';
   templateUrl: './wheel.html',
   styleUrl: './wheel.css',
 })
-export class Wheel {
+export class Wheel implements OnInit, AfterViewInit {
+  size = input.required<number>();
   choices = input.required<Choice[]>();
   picked = output<number>();
 
@@ -40,13 +41,9 @@ export class Wheel {
 
   wheel = viewChild<ElementRef<HTMLCanvasElement>>("wheel");
   flipper = viewChild<ElementRef<HTMLCanvasElement>>("flipper");
+  container = viewChild<ElementRef<HTMLDivElement>>("container");
 
-  center = {
-    x: 250,
-    y: 250
-  }
-
-  radius = 200;
+  radius: number = 0;
 
   colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'purple'];
 
@@ -90,16 +87,18 @@ export class Wheel {
 
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, 500, 500);
+    ctx.clearRect(0, 0, this.size(), this.size());
 
-    const flipperSize = 5;
+    const flipperSize = this.size() * 0.01;
+    const flipperLength = this.radius * 0.15;
+
     ctx.fillStyle = 'black';
 
-    let flipperX = this.center.x + this.radius;
-    let flipperY = this.center.y;
+    let flipperX = this.size() / 2 + this.radius;
+    let flipperY = this.size() / 2;
 
     ctx.beginPath();
-    ctx.moveTo(flipperX - 20, flipperY);
+    ctx.moveTo(flipperX - flipperLength, flipperY);
     ctx.arc(flipperX, flipperY, flipperSize, -Math.PI / 2, Math.PI / 2);
     ctx.closePath();
 
@@ -111,7 +110,7 @@ export class Wheel {
 
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, 500, 500);
+    ctx.clearRect(0, 0, this.size(), this.size());
 
     let slices: WheelSlice[] = this.slices();
 
@@ -120,8 +119,8 @@ export class Wheel {
       ctx.fillStyle = 'grey';
 
       ctx.beginPath();
-      ctx.moveTo(this.center.x, this.center.y);
-      ctx.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
+      ctx.moveTo(this.size() / 2, this.size() / 2);
+      ctx.arc(this.size() / 2, this.size() / 2, this.radius, 0, 2 * Math.PI);
       ctx.closePath();
 
       ctx.fill();
@@ -131,8 +130,8 @@ export class Wheel {
     slices.map((slice, i) => {
       ctx.fillStyle = this.colors[i % this.colors.length];
       ctx.beginPath();
-      ctx.moveTo(this.center.x, this.center.y);
-      ctx.arc(this.center.x, this.center.y, this.radius, slice.startAngle, slice.endAngle);
+      ctx.moveTo(this.size() / 2, this.size() / 2);
+      ctx.arc(this.size() / 2, this.size() / 2, this.radius, slice.startAngle, slice.endAngle);
       ctx.closePath();
       ctx.fill();
     });
@@ -144,8 +143,8 @@ export class Wheel {
       let xDir = Math.cos(sliceMidAngle);
       let yDir = Math.sin(sliceMidAngle);
 
-      let x = this.center.x + (xDir * this.radius * 0.9);
-      let y = this.center.y + (yDir * this.radius * 0.9);
+      let x = this.size() / 2 + (xDir * this.radius * 0.9);
+      let y = this.size() / 2 + (yDir * this.radius * 0.9);
 
       // Rotate text by rotating canvas, drawing, then restoring
       ctx.save();
@@ -163,13 +162,26 @@ export class Wheel {
     });
 
 
-    this.drawFlipper()
+    this.drawFlipper();
   }
 
   constructor() {
     effect(() => {
       this.drawWheel();
     });
+  }
+
+  ngOnInit() {
+    // this.radius = this.size() / 2 * 0.8;
+    // this.container()!.nativeElement.style.width = `${this.size()}`;
+    // this.container()!.nativeElement.style.height = `${this.size()}`;
+  }
+
+  ngAfterViewInit() {
+    this.radius = this.size() / 2 * 0.8;
+    this.container()!.nativeElement.style.width = `${this.size()}`;
+    this.container()!.nativeElement.style.height = `${this.size()}`;
+    this.drawWheel();
   }
 }
 

@@ -1,5 +1,6 @@
-<div class="wheel-container">
-    <canvas #wheel width="500" height="500" (transitionend)="resetWheelTransition()"></canvas>
-    <canvas #flipper width="500" height="500"></canvas>
+<h1>Task Wheel</h1>
+<div #container class="wheel-container">
+    <canvas #wheel [width]="size()" [height]="size()" (transitionend)="resetWheelTransition()"></canvas>
+    <canvas #flipper [width]="size()" [height]="size()"></canvas>
 </div>
 <button [disabled]="wheel.classList.contains('spinning')" (click)="spinWheel()">Spin</button>

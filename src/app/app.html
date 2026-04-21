@@ -1,2 +1,4 @@
-<app-wheel [choices]="choices" (picked)="reportPickedChoice($event)" />
-<app-choice-form (update)="updateChoices($event)" />
+<div class="picker">
+    <app-wheel [size]="800" [choices]="choices" (picked)="reportPickedChoice($event)" />
+    <app-choice-form (update)="updateChoices($event)" />
+</div>

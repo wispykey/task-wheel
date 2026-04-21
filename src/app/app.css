@@ -1,0 +1,9 @@
+.picker {
+    display: flex;
+    flex-direction: row;
+}
+
+:host {
+    display: flex;
+    justify-content: center;
+}
