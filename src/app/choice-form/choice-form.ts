@@ -51,7 +51,6 @@ export class ChoiceForm implements OnInit {
         return { label: choice.label, weight: choice.weight };
       });
       this.update.emit(updatedChoices);
-      console.log(updatedChoices);
     });
 
   }
