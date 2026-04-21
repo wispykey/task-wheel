@@ -51,7 +51,6 @@ export class Wheel {
 
   get currentChoiceIndex(): number {
     if (this.slices().length === 1) return 0;
-
     // Assume we pick the choice whose slice covers angle 0
 
     // Wheel spins clockwise, which means our reference point has rotated counter-clockwise
@@ -66,7 +65,6 @@ export class Wheel {
   resetWheelTransition() {
     const wheel = this.wheel()!.nativeElement;
     wheel.classList.remove('spinning');
-    // wheel.style.transform = 'none';
 
     this.picked.emit(this.currentChoiceIndex);
   }
@@ -107,27 +105,40 @@ export class Wheel {
       ctx.fill();
     }
 
+    // Draw colored regions
     slices.map((slice, i) => {
       ctx.fillStyle = this.colors[i % this.colors.length];
-
       ctx.beginPath();
       ctx.moveTo(this.center.x, this.center.y);
       ctx.arc(this.center.x, this.center.y, this.radius, slice.startAngle, slice.endAngle);
       ctx.closePath();
-
       ctx.fill();
     });
 
-    // //
-    // ctx.fillStyle = 'black';
-    // ctx.beginPath();
-    // ctx.moveTo(this.center.x, this.center.y);
-    // ctx.arc(this.center.x, this.center.y, this.radius, 0, 0);
-    // ctx.stroke();
-    // ctx.fill();
+    // Draw text labels
+    slices.map((slice) => {
+      let sliceMidAngle = slice.startAngle + (slice.endAngle - slice.startAngle) / 2;
 
+      let xDir = Math.cos(sliceMidAngle);
+      let yDir = Math.sin(sliceMidAngle);
 
+      let x = this.center.x + (xDir * this.radius * 0.9);
+      let y = this.center.y + (yDir * this.radius * 0.9);
 
+      // Rotate text by rotating canvas, drawing, then restoring
+      ctx.save();
+
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.font = '24px Arial';
+      ctx.fillStyle = 'black';
+
+      ctx.translate(x, y);
+      ctx.rotate(sliceMidAngle);
+      ctx.fillText(slice.label, 0, 0);
+
+      ctx.restore();
+    });
   }
 
   constructor() {
