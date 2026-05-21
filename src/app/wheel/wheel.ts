@@ -7,7 +7,7 @@ import { Choice } from '../model/choice';
   templateUrl: './wheel.html',
   styleUrl: './wheel.css',
 })
-export class Wheel implements OnInit, AfterViewInit {
+export class Wheel implements AfterViewInit {
   size = input.required<number>();
   choices = input.required<Choice[]>();
   picked = output<number>();
@@ -185,12 +185,6 @@ export class Wheel implements OnInit, AfterViewInit {
     effect(() => {
       this.drawWheel();
     });
-  }
-
-  ngOnInit() {
-    // this.radius = this.size() / 2 * 0.8;
-    // this.container()!.nativeElement.style.width = `${this.size()}`;
-    // this.container()!.nativeElement.style.height = `${this.size()}`;
   }
 
   ngAfterViewInit() {

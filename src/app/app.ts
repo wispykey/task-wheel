@@ -13,7 +13,27 @@ import { Choice } from './model/choice';
 export class App {
   protected readonly title = signal('task-wheel');
 
-  choices: Choice[] = [];
+  private localStorageKey = 'choices';
+
+  choices: Choice[] = this.initChoiceControls()
+
+  initChoiceControls() {
+
+    const savedChoices = localStorage.getItem(this.localStorageKey);
+
+    if (savedChoices) {
+      try {
+        const choicesToLoad = JSON.parse(savedChoices) as Choice[];
+        return choicesToLoad.map((choice) => {
+          return { label: choice.label, weight: choice.weight, color: choice.color }
+        })
+
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    return [];
+  }
 
 
   updateChoices(newChoices: Choice[]) {
