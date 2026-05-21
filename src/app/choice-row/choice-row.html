@@ -1,5 +1,5 @@
 <form [formGroup]="choiceControls()">
-    <input type="number" formControlName="weight" min="1" />
+    <input type="range" formControlName="weight" min="1" />
     <input type="text" formControlName="label" />
     <input type="color" formControlName="color" />
     <button type="button" (click)="signalForRemoval()">Remove</button>

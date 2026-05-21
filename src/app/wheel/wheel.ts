@@ -115,6 +115,7 @@ export class Wheel implements AfterViewInit {
 
     // This signal read triggers redraw in Angular effect
     let slices: WheelSlice[] = this.slices();
+    console.log(slices);
 
     // Draw shadow first as a single circle underneath
     ctx.save();
@@ -169,7 +170,7 @@ export class Wheel implements AfterViewInit {
 
       ctx.translate(x, y);
       ctx.rotate(sliceMidAngle);
-      ctx.fillText(slice.label, 0, 0);
+      if (slice.label) ctx.fillText(slice.label, 0, 0);
 
       ctx.restore();
     });

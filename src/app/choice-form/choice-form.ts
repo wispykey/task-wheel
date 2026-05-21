@@ -83,7 +83,7 @@ export class ChoiceForm implements OnInit {
   ngOnInit() {
     this.form.valueChanges.subscribe((values) => {
       let updatedChoices: Choice[] = values.choiceControls!.map((choice) => {
-        if (!choice.label || !choice.weight) return { label: "", weight: 1, color: this.defaultColor };
+        if (choice.label === undefined || choice.weight === undefined) return { label: "", weight: 1, color: this.defaultColor };
 
         return { label: choice.label, weight: choice.weight, color: choice.color ?? this.defaultColor };
       });
