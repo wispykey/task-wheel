@@ -30,7 +30,8 @@ export class Wheel implements OnInit, AfterViewInit {
       slices.push({
         label: choice.label,
         startAngle: currAngle,
-        endAngle: currAngle + angleLength
+        endAngle: currAngle + angleLength,
+        color: choice.color
       });
 
       currAngle += angleLength;
@@ -112,6 +113,7 @@ export class Wheel implements OnInit, AfterViewInit {
 
     ctx.clearRect(0, 0, this.size(), this.size());
 
+    // This signal read triggers redraw in Angular effect
     let slices: WheelSlice[] = this.slices();
 
     // Draw shadow first as a single circle underneath
@@ -139,7 +141,7 @@ export class Wheel implements OnInit, AfterViewInit {
 
     // Draw colored regions
     slices.map((slice, i) => {
-      ctx.fillStyle = this.colors[i % this.colors.length];
+      ctx.fillStyle = slice.color;
       ctx.beginPath();
       ctx.moveTo(this.size() / 2, this.size() / 2);
       ctx.arc(this.size() / 2, this.size() / 2, this.radius, slice.startAngle, slice.endAngle);
@@ -202,5 +204,6 @@ export class Wheel implements OnInit, AfterViewInit {
 type WheelSlice = {
   label: string,
   startAngle: number,
-  endAngle: number
+  endAngle: number,
+  color: string
 }
